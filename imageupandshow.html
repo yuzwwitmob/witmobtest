@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="javascripts/jquery-1.7.2.js" ></script>
+    <script type="text/javascript">
+
+        function fileupload()
+        {
+
+            var fileObj = document.getElementById("imgfile").files[0]; // 获取文件对象
+            var FileController = "/upimage";                    // 接收上传文件的后台地址
+            // FormData 对象
+            var form = new FormData();
+            form.append("author", "hooyes");                        // 可以增加表单数据
+            form.append("file", fileObj);                           // 文件对象
+            // XMLHttpRequest 对象
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", FileController, true);
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4){
+                    if(xhr.status==200){
+                        var str = xhr.response;
+                        var jsons=JSON.parse(xhr.responseText)
+                        console.log("htmlyemian",jsons);
+                        $('.imageView').empty();
+                        for(var i=0;i<jsons.length;i++){
+                            $('.imageView').append('<img src="'+jsons[i].imagePath+'">');
+                        }
+
+
+                    }else{
+                        alert("失败");
+                    }
+                }
+            } ;
+            xhr.send(form);
+            xhr.onload = function () {
+//                  alert("上传完成!");
+            };
+
+
+
+
+        }
+
+    </script>
+</head>
+<body>
+
+<input id="imgfile" type="file"  value="选择文件"/>
+<input type="button" id="btnUpload" value="上传图片" onclick="fileupload()"/>
+<div class="imageView"></div>
+
+</body>
+</html>
